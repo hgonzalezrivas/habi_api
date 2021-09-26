@@ -51,7 +51,7 @@ archivo](https://github.com/hgonzalezrivas/habi_api/blob/master/openapi.yaml)
 Se propone un modelo de base de datos como el que se indica a
 continuación:
 
-![alt text](https://github.com/hgonzalezrivas/habi_api/blob/master/bd_hapi.png?raw=true)
+![alt text](https://github.com/hgonzalezrivas/habi_api/blob/master/bd_habi.png)
 
 
 - Se cuenta con un catálogo de ciudades y estados.
