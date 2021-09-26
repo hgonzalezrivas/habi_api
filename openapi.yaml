@@ -1,0 +1,203 @@
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: HABI API
+  description: |-
+    Manage houses, get list of houses and insert reaction
+schemes:
+  - https
+produces:
+  - application/json
+
+paths:
+
+  /house:
+    get:
+      tags:
+        - House
+      operationId: getHouses
+      summary: List of houses
+      description: Get list of houses
+      parameters:
+        - name: status
+          in: query
+          description: |-
+            Status of the house
+            `1: In proccess.
+            2: Owned by Habi.
+            3: Pre Sale.
+            4: Published for sale.
+            5: Sold.
+            `
+          required: false
+          type: integer
+          format: int64
+          enum: [1, 2, 3, 4, 5]
+        - name: city
+          in: query
+          description: City where the house is located
+          required: false
+          type: string
+        - name: year
+          in: query
+          description: Year when the house was built
+          type: integer
+          format: int64
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success.
+          schema:
+            $ref: '#/definitions/houseResponse'
+          examples:
+            application/json:
+              {
+                "message": "Success.",
+                "data": [
+                  {
+                    "id": 1,
+                    "address": "calle 23 #45-67",
+                    "city": "bogota",
+                    "price": 120000000,
+                    "description": "Hermoso apartamento en el centro de la ciudad",
+                    "year": 2000,
+                    "label": "Imueble en proceso de compra",
+                    "status_id": 1
+                  }
+                ],
+                "total": 1
+              }
+        '400':
+          description: Invalid request.
+          schema:
+            $ref: '#/definitions/error'
+          examples:
+            application/json:
+              {
+                "message": "Bad request.",
+                "detail": "Id of status out of range"
+              }
+        '500':
+          description: Internal server error.
+          schema:
+            $ref: '#/definitions/error'
+          examples:
+            application/json:
+              {
+                "message": "Internal server error.",
+                "detail": "Database timeout connection"
+              }
+
+  /house/{id}/reaction:
+    post:
+      tags:
+        - House
+      operationId: houseReaction
+      summary: House reaction
+      description: Insert user reaction into a house
+      parameters:
+        - name: id
+          in: path
+          description: House id
+          type: integer
+          format: int64
+          minimum: 1
+          required: true
+        - name: body
+          in: body
+          description: User request
+          schema:
+            $ref: '#/definitions/userRequest'
+          required: true
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Success.
+        '400':
+          description: Invalid request.
+          schema:
+            $ref: '#/definitions/error'
+          examples:
+            application/json:
+              {
+                "message": "Bad request.",
+                "detail": "Missing parameter"
+              }
+        '500':
+          description: Internal server error.
+          schema:
+            $ref: '#/definitions/error'
+          examples:
+            application/json:
+              {
+                "message": "Internal server error.",
+                "detail": "Database timeout connection"
+              }
+
+definitions:
+
+  userRequest:
+    type: object
+    properties:
+      idUser:
+        type: integer
+        format: int64
+        minimum: 1
+
+  houseResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/houses'
+      total:
+        type: integer
+        format: int64
+
+  error:
+    type: object
+    properties:
+      message:
+        type: string
+      detail:
+        type: string
+
+  houses:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Id of the house
+      address:
+        type: string
+        description: Address where the house is located
+      city:
+        type: string
+        description: City where the house is located
+      price:
+        type: string
+        description: House's price
+      description:
+        type: string
+        description: House's description
+      year:
+        type: integer
+        format: int64
+        description: Year when the house was built
+      status:
+        type: string
+        description: Description of house's status
+      status_id:
+        type: integer
+        format: int64
+        description: Id of house's status

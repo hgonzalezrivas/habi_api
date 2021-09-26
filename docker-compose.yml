@@ -1,0 +1,13 @@
+version: "2.4"
+
+services:
+
+  api:
+    build: .
+    container_name: habi-api
+    environment:
+      - APP_NAME=HABI-API
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
